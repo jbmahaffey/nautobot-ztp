@@ -13,8 +13,7 @@ def main():
     ####################################################
     nautobot = 'http://192.168.101.7/api/dcim/devices/?serial=' # Nautobot server, should just need to modify IP
     token = '2b501faae646e9fd686513bf7ef2e6852f43b30a' # Nautobot API token
-    tftp = '192.168.101.40' # TFTP server IP
-    ztpfile = 'ztp-config' # ZTP config file
+    tftp = '192.168.101.40/ztp/ztp-config' # TFTP server information
     firmware = ''
     ####################################################
 
@@ -26,7 +25,7 @@ def main():
     match = nauto.json()
     
     if match['results'][0]['name'] != '':
-        subprocess.check_output("FastCli -p 15 -c 'copy tftp://%s/ztp/%s running-config'" % (tftp, ztpfile), shell=True)
+        subprocess.check_output("FastCli -p 15 -c 'copy tftp://%s running-config'" % (tftp), shell=True)
         subprocess.check_output("FastCli -p 15 -c $'config\nhostname %s'" % match['results'][0]['name'], shell=True)
         subprocess.check_output("FastCli -p 15 -c 'write memory'", shell=True)
         if firmware != '':
