@@ -14,8 +14,8 @@ def main():
     nautobot = 'http://192.168.101.7/api/dcim/devices/?serial=' # Nautobot server, should just need to modify IP
     token = '2b501faae646e9fd686513bf7ef2e6852f43b30a' # Nautobot API token
     tftpbase = '192.168.101.40/ztp/' # TFTP server information
-    ztpconfig = 'ztp-config'
-    firmware = ''
+    ztpconfig = 'ztp-config' # ztp config file
+    firmware = '' # firmware file
     ####################################################
 
     serial = subprocess.getoutput("FastCli -p 15 -c 'show version | json'")
