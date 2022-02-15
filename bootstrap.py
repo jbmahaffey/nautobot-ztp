@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import json
-from multiprocessing.connection import wait
 import requests
 import subprocess
 import logging
