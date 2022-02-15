@@ -23,7 +23,7 @@ def main():
             headers={"Authorization": "Token %s" % token})
     match = nauto.json()
     
-    if match['results'][0]['name'] != '':
+    if match['results']:
         subprocess.check_output("FastCli -p 15 -c 'copy tftp://%s%s running-config'" % (tftpbase, ztpconfig), shell=True)
         subprocess.check_output("FastCli -p 15 -c $'config\nhostname %s'" % match['results'][0]['name'], shell=True)
         subprocess.check_output("FastCli -p 15 -c 'write memory'", shell=True)
@@ -31,6 +31,9 @@ def main():
             subprocess.check_output("FastCli -p 15 -c 'copy tftp://%s%s flash:%s'" % (tftpbase, firmware, firmware), shell=True)
     else:
         logging.error('No match found in Nautobot')
+        subprocess.check_output("FastCli -p 15 -c 'copy tftp://%s%s flash:startup-config'" % (tftpbase, ztpconfig), shell=True)
+        if firmware != '':
+            subprocess.check_output("FastCli -p 15 -c 'copy tftp://%s%s flash:%s'" % (tftpbase, firmware, firmware), shell=True)
 
 #########################
 # Execute Main function #
