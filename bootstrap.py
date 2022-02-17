@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import json
-import requests
+import urllib
 import subprocess
 import logging
 
@@ -19,9 +19,17 @@ def main():
     serial = subprocess.getoutput("FastCli -p 15 -c 'show version | json'")
     snjson = json.loads(serial)
     
-    nauto = requests.get(nautobot + snjson['serialNumber'], 
+    
+    nauto = urllib.request.Request(nautobot + snjson['serialNumber'], 
             headers={"Authorization": "Token %s" % token})
-    match = nauto.json()
+    try:
+        with urllib.request.urlopen(nauto) as httpresponse:
+            info = (httpresponse.read().decode())
+
+    except:
+        logging.error('Unable to open connection to nautobot')
+    
+    match = json.loads(info)
     
     if match['results']:
         subprocess.check_output("FastCli -p 15 -c 'copy tftp://%s%s running-config'" % (tftpbase, ztpconfig), shell=True)
